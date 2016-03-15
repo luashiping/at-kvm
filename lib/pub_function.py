@@ -29,8 +29,7 @@ def get_hostadrr():
 ##ip检测
 def check_ip(ip):
 	try:
-		res = '12'
-		#res = subprocess.call(['ping', '-c', '3', ip])
+		res = subprocess.call(['ping', '-c', '3', ip])
 		if res == 0:	
 			ptred("危险提示:你所设定的虚拟机IP地址可能与现有IP地址产生冲突,请更换")
 			exit(1)
