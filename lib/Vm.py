@@ -15,6 +15,8 @@ class Vm:
         self._config_info = Config('vm.cfg')
         self._vm_pool = self._config_info.get('defaults','vm_pool')
         self._mirror_pool = self._config_info.get('defaults','mirror_pool')
+        self._internal_br = self._config_info.get('defaults','internal-net')
+        self._external_br = self._config_info.get('defaults','external-net')
         self._script_dir = "./script/"
         self._vm_name = optdict['vm_name']
         self._memory = optdict['mem']
@@ -26,7 +28,6 @@ class Vm:
         check_ip(self._ip)
         self._hostname = self._vm_name
         self._is_exist = None
-        exit()
         if optdict.has_key('data_disk_size'):
             self._data_disk_size = int(optdict['data_disk_size'])
             self._is_exist = True
@@ -41,8 +42,8 @@ class Vm:
         create_xml = add("--vcpus %s \\" % self._vcpus)
         create_xml = add("--ram %s \\" % self._memory)
         create_xml = add(self._get_disk_create_xml())
-        create_xml = add("--network bridge=br1 \\")
-        create_xml = add("--network bridge=br2 \\")
+        create_xml = add("--network bridge="+self._internal_br+" \\") if self._internal_br else add("--network bridge=br0 \\")
+        create_xml = add("--network bridge="+self._external_br+" \\") if self._external_br else add('')
         create_xml = add("--graphics vnc,listen="+self._host+" \\")
         create_xml = add("--noautoconsole \\")
         create_xml = add("--os-type=linux \\")
@@ -145,8 +146,8 @@ class Vm:
         self.g._write(shadow_file,new_shadow_data)
 
     def _modify_network(self):
-        iface_filename = "/etc/sysconfig/network-scripts/ifcfg-eth1"
-        nic_info = "DEVICE=eth1\nTYPE=Ethernet\nONBOOT=yes\nNM_CONTROLLED=yes\nBOOTPROTO=static\nIPADDR="+self._ip+"\nNETMASK=255.255.255.0"
+        iface_filename = "/etc/sysconfig/network-scripts/ifcfg-eth0"
+        nic_info = "DEVICE=eth0\nTYPE=Ethernet\nONBOOT=yes\nNM_CONTROLLED=yes\nBOOTPROTO=static\nIPADDR="+self._ip+"\nNETMASK=255.255.255.0"
         self.g._write(iface_filename,nic_info)
         
     def _modify_hostname(self):
