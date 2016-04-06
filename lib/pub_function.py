@@ -10,6 +10,7 @@ from passlib.hash import sha512_crypt
 ##随机密码
 def rand_password(bit):
     password = string.join(random.sample(string.digits+string.letters, bit)).replace(' ','')
+    password = "87755600"
     return password
 
 ##sha512_crypt 密码哈希
