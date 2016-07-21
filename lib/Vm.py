@@ -10,9 +10,9 @@ from Config import *
 class Vm:
     def __init__(self,optdict={}):
         self._xml_dir = "./vm_xml/"
-        self._host = get_hostadrr()
         self._vg_name = "vg_"+ get_hostname()
         self._config_info = Config('vm.cfg')
+	self._host = self._config_info.get('defaults','bind_ip')
         self._vm_pool = self._config_info.get('defaults','vm_pool')
         self._mirror_pool = self._config_info.get('defaults','mirror_pool')
         self._internal_br = self._config_info.get('defaults','internal-net')
@@ -44,7 +44,7 @@ class Vm:
         create_xml = add(self._get_disk_create_xml())
         create_xml = add("--network bridge="+self._internal_br+" \\") if self._internal_br else add("--network bridge=br0 \\")
         create_xml = add("--network bridge="+self._external_br+" \\") if self._external_br else add('')
-        create_xml = add("--graphics vnc,listen="+self._host+" \\")
+        create_xml = add("--graphics vnc,listen="+self._host+" \\") if self._host else add("--graphics vnc,listen=0.0.0.0 \\")
         create_xml = add("--noautoconsole \\")
         create_xml = add("--os-type=linux \\")
         create_xml = add("--os-variant=rhel6 \\")
@@ -115,11 +115,11 @@ class Vm:
         root_partion = self.g._inspect_os()
         for i in root_partion:
             self.g._mount(i,"/")
-        ##self._injection_ssh_key()
+        #self._injection_ssh_key()
         self._modify_root_password()
-        self._modify_network()
-        self._modify_hostname()
-        self._mount_data_disk()
+        #self._modify_network()
+        #self._modify_hostname()
+        #self._mount_data_disk()
             
     def _injection_ssh_key(self):
         fk = open(self._script_dir+"/pubkey.sh",'r')

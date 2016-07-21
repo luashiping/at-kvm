@@ -4,15 +4,16 @@
 ##################################
 virt-install \
 --virt-type=kvm \
---name=test \
+--name=centos70 \
 --vcpus=1 \
 --ram=1024 \
---disk=/data/image/centos-6.6.qcow2_bak,bus=virtio,cache=writethrough,format=qcow2,io=native \
---network bridge=br1 --network bridge=br2 \
---graphics vnc,listen=192.168.18.21 \
+--disk=/data/image/centos-70.qcow2,bus=virtio,cache=writethrough,format=qcow2,io=native \
+--network bridge=br0 \
+--graphics vnc,listen=0.0.0.0 \
 --noautoconsole \
 --os-type=linux \
---os-variant=rhel6 \
---import --print-xml
+--os-variant=rhel7 \
+--cdrom "/data/iso/CentOS-7.0-1406-x86_64-Everything.iso"
+#--import --print-xml
 
-#--location http://192.168.18.22/centos6/ \
+#--location http://192.168.1.22/centos6/ \

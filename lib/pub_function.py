@@ -25,6 +25,8 @@ def get_hostname():
 ##根据主机名获取主机ip
 def get_hostadrr():
 	myname = get_hostname()
+	print myname
+	exit()
 	return socket.gethostbyname(myname)
 
 ##ip检测
