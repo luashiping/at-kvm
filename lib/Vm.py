@@ -115,7 +115,7 @@ class Vm:
         root_partion = self.g._inspect_os()
         for i in root_partion:
             self.g._mount(i,"/")
-        self._injection_ssh_key()
+        ##self._injection_ssh_key()
         self._modify_root_password()
         self._modify_network()
         self._modify_hostname()
